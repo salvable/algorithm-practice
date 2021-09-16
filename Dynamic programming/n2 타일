@@ -1,0 +1,11 @@
+def solution(n):
+    answer = 0
+    # 제한사항
+    dp=[0]*60001
+    # 첫번쨰 값
+    dp[1]=1
+    # 두번째 값
+    dp[2]=2
+    for i in range(3,n+1):
+        dp[i]=(dp[i-1]+dp[i-2])%1000000007
+    return dp[n]
