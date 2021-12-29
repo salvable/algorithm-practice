@@ -1,13 +1,3 @@
-from itertools import combinations, permutations
-from itertools import product
-from bisect import bisect_left, bisect_right
-from collections import Counter
-import heapq
-from collections import deque
-from sys import stdin
-import sys
-import math
-
 n = int(input())
 T = [0 for _ in range(n+1)]
 P = [0 for _ in range(n+1)]
