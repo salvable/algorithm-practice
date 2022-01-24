@@ -1,13 +1,3 @@
-from itertools import product
-from bisect import bisect_left, bisect_right
-from collections import Counter
-import heapq
-from collections import deque
-from sys import stdin
-import sys
-import math
-from itertools import combinations, permutations
-
 N = int(input())
 M = int(input())
 
@@ -15,7 +5,7 @@ arr = list(map(int, input().split()))
 
 result = abs(100 - N)
 
-#
+# 채널 자체는 무한대이므로 범위는 1000001 로 설정
 for i in range(1000001):
     string = str(i)
 

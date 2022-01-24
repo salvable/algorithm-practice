@@ -1,30 +1,22 @@
 import heapq
 
 def solution(scoville, K):
-    q = []
-    count = 0 
-    
-    for s in scoville:
-        heapq.heappush(q,s)
-        
-    while len(q) >= 2:
-        first = heapq.heappop(q)
+    heapq.heapify(scoville)
+    count = 0
 
-        # 첫번째 원소가 지정한 지수보다 높으면 다시 heapq에 넣고 반복문 탈출
+    while True:
+
+        first = heapq.heappop(scoville)
+
         if first >= K:
-            heapq.heappush(q,first)
             break
-            
-        second = heapq.heappop(q)
-        
-        newScoville = first + second * 2
-        heapq.heappush(q,newScoville)
+
+        # 더이상 진행할 원소가 없는 경우
+        if len(scoville) == 0:
+            return -1
+
+        second = heapq.heappop(scoville)
+        heapq.heappush(scoville, first + second * 2)
         count += 1
 
-    # 꺼낸 제일 작은 원소가 k보다 작으면 -1, 아니면 count 리턴
-    result = heapq.heappop(q)
-    
-    if result < K:
-        return -1
-    
     return count
