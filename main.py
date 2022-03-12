@@ -12,69 +12,105 @@ from collections import deque
 import sys
 input = sys.stdin.readline
 
-n, m = map(int, input().split())
-board = [list(map(int,input().split())) for _ in range(n)]
+def solution(n, clockwise):
+    answer = [[0] * n for _ in range(n)]
 
-dx = [1,-1,0,0]
-dy = [0,0,1,-1]
+    # 좌상단, 우상단, 우하단, 좌하단의 방향
+    if clockwise:
+        dx = [0, 1, 0, -1]
+        dy = [1, 0, -1, 0]
+    else:
+        dx = [1, 0, -1, 0]
+        dy = [0, -1, 0, 1]
 
-# 지나간 일수를 기록할 day와 둘 이상으로 나누어지는지 확인할 check
-day = 0
-check = False
+    left_up = (0, 0)
+    right_up = (0, n - 1)
+    right_down = (n - 1, n - 1)
+    left_down = (n - 1, 0)
+    # 각 네지점 1로 초기화
+    answer[left_up[0]][left_up[1]] = 1
+    answer[right_up[0]][right_up[1]] = 1
+    answer[right_down[0]][right_down[1]] = 1
+    answer[left_down[0]][left_down[1]] = 1
 
-def bfs(x,y):
-    q = deque()
-    q.append((x,y))
-    visited[x][y] = 1
+    count = 0
 
-    while q:
-        x, y = q.popleft()
+    if n % 2 == 0:
+        case = n // 2
+    else:
+        case = n // 2 + 1
 
-        for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
+    while case > 0:
+        index = (0 + count) % 4
+        nx, ny = left_up[0] + dx[index], left_up[1] + dy[index]
+        if answer[nx][ny] == 0:
+            answer[nx][ny] = answer[left_up[0]][left_up[1]] + 1
+            left_up = (nx, ny)
 
-            # 좌표상에 있을 경우에
-            if 0 <= nx < n and 0 <= ny < m:
-                if board[nx][ny] != 0 and not visited[nx][ny]:
-                    visited[nx][ny] = 1
-                    q.append((nx,ny))
-                # 면이 0이면 현 좌표의 melt_ice 배열을 하나 올려줌
-                elif board[nx][ny] == 0:
-                    melt_ice[x][y] += 1
-    # 연결된 하나의 빙판이므로 1을 리턴
-    return 1
+        index = (1 + count) % 4
+        nx, ny = right_up[0] + dx[index], right_up[1] + dy[index]
+        if answer[nx][ny] == 0:
+            answer[nx][ny] = answer[right_up[0]][right_up[1]] + 1
+            right_up = (nx, ny)
 
-while True:
-    visited = [[0] * m for _ in range(n)]
-    # 녹은 아이스의 개수 저장해 주기 위한 블록
-    melt_ice = [[0] * m for _ in range(n)]
-    # 빙반 개수
-    ice = 0
+        index = (2 + count) % 4
+        nx, ny = right_down[0] + dx[index], right_down[1] + dy[index]
+        if answer[nx][ny] == 0:
+            answer[nx][ny] = answer[right_down[0]][right_down[1]] + 1
+            right_down = (nx, ny)
 
-    for i in range(n):
-        for j in range(m):
-            if not visited[i][j] and board[i][j] != 0:
-                ice += bfs(i,j)
+        index = (3 + count) % 4
+        nx, ny = left_down[0] + dx[index], left_down[1] + dy[index]
+        if answer[nx][ny] == 0:
+            answer[nx][ny] = answer[left_down[0]][left_down[1]] + 1
+            left_down = (nx, ny)
 
-    for i in range(n):
-        for j in range(m):
-            board[i][j] -= melt_ice[i][j]
-            if board[i][j] < 0:
-                board[i][j] = 0
+        print(answer)
 
-    # 빙판이 다 녹아 없어질때까지 분리되지 않는다면
-    if ice == 0:
-        break
+        index = (0 + count) % 4
+        nx, ny = left_up[0] + dx[index], left_up[1] + dy[index]
+        while answer[nx][ny] == 0:
+            answer[nx][ny] = answer[left_up[0]][left_up[1]] + 1
+            left_up = (nx, ny)
+            nx, ny = nx + dx[index], ny + dy[index]
 
-    # 빙판이 두개 이상으로 분리되면
-    if ice >= 2:
-        check = True
-        break
+        index = (1 + count) % 4
+        nx, ny = right_up[0] + dx[index], right_up[1] + dy[index]
+        while answer[nx][ny] == 0:
+            answer[nx][ny] = answer[right_up[0]][right_up[1]] + 1
+            right_up = (nx,ny)
+            nx, ny = nx + dx[index], ny + dy[index]
 
-    day += 1
+        index = (2 + count) % 4
+        nx, ny = right_down[0] + dx[index], right_down[1] + dy[index]
+        while answer[nx][ny] == 0:
+            answer[nx][ny] = answer[right_down[0]][right_down[1]] + 1
+            right_down = (nx,ny)
+            nx, ny = nx + dx[index], ny + dy[index]
 
-if check:
-    print(day)
-else:
-    print(0)
+        index = (3 + count) % 4
+        nx, ny = left_down[0] + dx[index], left_down[1] + dy[index]
+        while answer[nx][ny] == 0:
+            answer[nx][ny] = answer[left_down[0]][left_down[1]] + 1
+            left_down = (nx,ny)
+            nx, ny = nx + dx[index], ny + dy[index]
+
+        if clockwise:
+            count += 1
+        else:
+            count -= 1
+
+        case -= 1
+        print(answer)
+
+    return answer
+
+solution(6,True)
+
+
+[[1000000000.0, 1, 1, 1000000000.0, 1000000000.0, 1000000000.0]
+    , [1000000000.0, 0, 1000000000.0, 1, 1, 1000000000.0],
+ [1000000000.0, 1000000000.0, 0, 1000000000.0, 1000000000.0, 1000000000.0],
+ [1000000000.0, 1000000000.0, 1000000000.0, 0, 1000000000.0, 1000000000.0],
+ [1000000000.0, 1000000000.0, 1000000000.0, 1000000000.0, 0, 1000000000.0],
+ [1000000000.0, 1000000000.0, 1000000000.0, 1000000000.0, 1000000000.0, 0]]
