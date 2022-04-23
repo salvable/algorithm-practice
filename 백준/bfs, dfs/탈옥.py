@@ -1,27 +1,18 @@
-import copy
-import os
-from bisect import bisect_left, bisect_right
-from collections import Counter
-import heapq
-from collections import deque
-from sys import stdin
-import math
-from itertools import combinations, permutations, combinations_with_replacement, product
-import requests
 from collections import deque
 
 import sys
-sys.setrecursionlimit(10**6)
+
+sys.setrecursionlimit(10 ** 6)
 input = sys.stdin.readline
 
 dx = [0, 1, 0, -1]
 dy = [1, 0, -1, 0]
 
 
-def bfs(x,y):
-    visited = [[-1] * (w+2) for _ in range(h+2)]
+def bfs(x, y):
+    visited = [[-1] * (w + 2) for _ in range(h + 2)]
     q = deque()
-    q.append((x,y))
+    q.append((x, y))
     visited[x][y] = 0
 
     while q:
@@ -32,7 +23,7 @@ def bfs(x,y):
             ny = y + dy[i]
 
             # 범위 넘어가면 패스
-            if nx < 0 or nx > h+1 or ny < 0 or ny > w+1:
+            if nx < 0 or nx > h + 1 or ny < 0 or ny > w + 1:
                 continue
             # 벽이거나 방문한 경우 패스
             if visited[nx][ny] >= 0 or visited[nx][ny] == "*":
@@ -48,6 +39,7 @@ def bfs(x,y):
 
     return visited
 
+
 for _ in range(int(input())):
     h, w = map(int, input().split())
     graph = []
@@ -56,12 +48,12 @@ for _ in range(int(input())):
     for _ in range(h):
         graph.append(list("." + input().strip() + "."))
 
-    graph.append(list("." * (w+2)))
+    graph.append(list("." * (w + 2)))
 
     q = deque()
 
-    for i in range(h+2):
-        for j in range(w+2):
+    for i in range(h + 2):
+        for j in range(w + 2):
             # 수감자의 위치 기록
             if graph[i][j] == "$":
                 graph[i][j] = "."
@@ -75,8 +67,8 @@ for _ in range(int(input())):
 
     answer = 1e9
 
-    for i in range(h+2):
-        for j in range(w+2):
+    for i in range(h + 2):
+        for j in range(w + 2):
             # 벽인 경우 패스
             if graph[i][j] == "*":
                 continue
