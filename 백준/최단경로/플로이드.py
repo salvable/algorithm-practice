@@ -7,7 +7,7 @@ for _ in range(m):
     start, end, cost = map(int, input().split())
     graph[start][end] = min(cost, graph[start][end])
 
-for i in range(1,n+1):
+for i in range(1, n+1):
     graph[i][i] = 0
 
 for k in range(n+1):
