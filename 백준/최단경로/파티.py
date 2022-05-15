@@ -1,21 +1,10 @@
-import copy
-import os
-from bisect import bisect_left, bisect_right
-from collections import Counter
 import heapq
-from collections import deque
-from sys import stdin
-import math
-from itertools import combinations, permutations, combinations_with_replacement, product
-import requests
-from collections import deque
-
-dx = [0, 1, 0, -1]
-dy = [1, 0, -1, 0]
-
 import sys
-sys.setrecursionlimit(10**6)
+
 input = sys.stdin.readline
+
+n, m, x = map(int, input().split())
+graph = [[] for _ in range(n + 1)]
 
 
 def dijkstra(start):
@@ -40,17 +29,17 @@ def dijkstra(start):
 
     return distance
 
-n = int(input())
-m = int(input())
-
-graph = [[] for _ in range(n + 1)]
 
 for _ in range(m):
     a, b, cost = map(int, input().split())
-
     graph[a].append((b, cost))
 
-start, end = map(int, input().split())
-result = dijkstra(start)
+answer = 0
 
-print(result[end])
+for i in range(1, n + 1):
+    target = dijkstra(i)
+    home = dijkstra(x)
+
+    answer = max(answer, target[x] + home[i])
+
+print(answer)
